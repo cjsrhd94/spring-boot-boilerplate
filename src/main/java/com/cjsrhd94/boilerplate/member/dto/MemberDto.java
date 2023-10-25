@@ -5,7 +5,6 @@ import org.springframework.web.multipart.MultipartFile;
 import com.cjsrhd94.boilerplate.member.entity.Member;
 
 import jakarta.validation.constraints.NotBlank;
-import lombok.Builder;
 import lombok.Data;
 
 public class MemberDto {

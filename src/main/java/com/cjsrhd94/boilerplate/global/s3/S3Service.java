@@ -17,7 +17,6 @@ import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.amazonaws.services.s3.model.S3Object;
 import com.amazonaws.services.s3.model.S3ObjectInputStream;
-import com.cjsrhd94.boilerplate.global.error.business.ErrorCode;
 import com.cjsrhd94.boilerplate.global.error.business.FileUploadFailException;
 
 import lombok.RequiredArgsConstructor;

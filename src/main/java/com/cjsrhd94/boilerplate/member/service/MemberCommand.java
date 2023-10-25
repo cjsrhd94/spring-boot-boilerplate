@@ -8,7 +8,6 @@ import com.cjsrhd94.boilerplate.global.s3.FileUtil;
 import com.cjsrhd94.boilerplate.global.s3.S3Service;
 import com.cjsrhd94.boilerplate.member.dto.MemberDto;
 import com.cjsrhd94.boilerplate.member.entity.Member;
-import com.cjsrhd94.boilerplate.member.entity.Profile;
 import com.cjsrhd94.boilerplate.member.repository.MemberRepository;
 
 import lombok.RequiredArgsConstructor;

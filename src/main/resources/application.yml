@@ -21,6 +21,6 @@ logging:
         type:
           descriptor:
             sql: trace
-# ?? ?? ??
+# 임시 포트
 server:
   port: 2222
