@@ -21,3 +21,6 @@ logging:
         type:
           descriptor:
             sql: trace
+# ?? ?? ??
+server:
+  port: 2222
