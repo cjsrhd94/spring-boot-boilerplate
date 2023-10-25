@@ -1,4 +1,4 @@
-package com.cjsrhd94.boilerplate.controller;
+package com.cjsrhd94.boilerplate.member.controller;
 
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;

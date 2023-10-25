@@ -12,7 +12,7 @@ import lombok.Getter;
 @EntityListeners(AuditingEntityListener.class)
 @MappedSuperclass
 @Getter
-public class BaseEntity {
+public class BaseEntity extends BaseTimeEntity{
 	@CreatedBy
 	@Column(name = "created_by", updatable = false)
 	private String createdBy;
