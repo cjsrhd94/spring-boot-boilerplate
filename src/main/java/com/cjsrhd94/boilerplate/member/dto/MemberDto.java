@@ -3,6 +3,7 @@ package com.cjsrhd94.boilerplate.member.dto;
 import com.cjsrhd94.boilerplate.member.entity.Member;
 
 import jakarta.validation.constraints.NotBlank;
+import lombok.Builder;
 import lombok.Data;
 
 public class MemberDto {
@@ -24,6 +25,19 @@ public class MemberDto {
 				.email(email)
 				.phone(phone)
 				.build();
+		}
+	}
+
+	@Data
+	public static class Detail {
+		private String userName;
+		private String email;
+		private String phone;
+
+		public Detail(Member member) {
+			this.userName = member.getUserName();
+			this.email = member.getEmail();
+			this.phone = member.getPhone();
 		}
 	}
 }
