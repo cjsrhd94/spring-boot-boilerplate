@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
 import com.cjsrhd94.boilerplate.global.error.business.BaseException;
+import com.cjsrhd94.boilerplate.global.error.business.ErrorCode;
 
 import lombok.extern.slf4j.Slf4j;
 

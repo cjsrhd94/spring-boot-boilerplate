@@ -1,7 +1,5 @@
 package com.cjsrhd94.boilerplate.global.error.business;
 
-import com.cjsrhd94.boilerplate.global.error.ErrorCode;
-
 import lombok.Getter;
 
 @Getter

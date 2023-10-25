@@ -1,4 +1,4 @@
-package com.cjsrhd94.boilerplate.global.error;
+package com.cjsrhd94.boilerplate.global.error.business;
 
 import static org.springframework.http.HttpStatus.*;
 

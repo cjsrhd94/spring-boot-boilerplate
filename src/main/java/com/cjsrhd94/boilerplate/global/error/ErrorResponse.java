@@ -8,6 +8,8 @@ import java.util.stream.Collectors;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
+import com.cjsrhd94.boilerplate.global.error.business.ErrorCode;
+
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
