@@ -1,5 +1,7 @@
 package com.cjsrhd94.boilerplate.member.dto;
 
+import org.springframework.web.multipart.MultipartFile;
+
 import com.cjsrhd94.boilerplate.member.entity.Member;
 
 import jakarta.validation.constraints.NotBlank;
@@ -39,5 +41,10 @@ public class MemberDto {
 			this.email = member.getEmail();
 			this.phone = member.getPhone();
 		}
+	}
+
+	@Data
+	public static class Profile {
+		private MultipartFile profile;
 	}
 }
