@@ -17,7 +17,7 @@ import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.amazonaws.services.s3.model.S3Object;
 import com.amazonaws.services.s3.model.S3ObjectInputStream;
-import com.cjsrhd94.boilerplate.global.error.business.FileUploadFailException;
+import com.cjsrhd94.boilerplate.global.error.business.FileUploadException;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -34,7 +34,7 @@ public class S3Service {
 
 	public String upload(MultipartFile file, String dirPath) {
 		if (file == null || file.isEmpty()) {
-			throw new FileUploadFailException();
+			throw new FileUploadException();
 		}
 
 		String filePath = dirPath + "/" + UUID.randomUUID()
@@ -48,7 +48,7 @@ public class S3Service {
 			amazonS3Client.putObject(new PutObjectRequest(bucket, filePath, inputStream, objectMetadata)
 				.withCannedAcl(CannedAccessControlList.PublicRead));
 		} catch (IOException e) {
-			throw new FileUploadFailException();
+			throw new FileUploadException();
 		}
 
 		return "/" + filePath;
@@ -58,10 +58,14 @@ public class S3Service {
 		return imgName.substring(imgName.lastIndexOf("."));
 	}
 
-	public byte[] download(String fileUrl) throws IOException {
+	public byte[] download(String fileUrl) {
 		S3Object object = amazonS3Client.getObject(new GetObjectRequest(bucket, fileUrl));
 		S3ObjectInputStream objectInputStream = object.getObjectContent();
-		return IOUtils.toByteArray(objectInputStream);
+		try {
+			return IOUtils.toByteArray(objectInputStream);
+		} catch (IOException e) {
+			throw new FileUploadException();
+		}
 	}
 
 	public String delete(String fileUrl) {
