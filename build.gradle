@@ -31,6 +31,9 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	implementation 'org.springframework.data:spring-data-envers'
 
+	implementation group: 'com.auth0', name: 'java-jwt', version: '4.4.0'
+	implementation group: 'org.json', name: 'json', version: '20231013'
+
 	implementation 'org.postgresql:postgresql'
 
 	// AWS S3
