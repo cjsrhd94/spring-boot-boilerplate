@@ -1,5 +1,6 @@
 package com.cjsrhd94.boilerplate.member.entity;
 
+import org.hibernate.envers.Audited;
 import org.springframework.util.StringUtils;
 
 import com.cjsrhd94.boilerplate.global.audit.BaseEntity;
@@ -18,6 +19,7 @@ import lombok.NoArgsConstructor;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Audited
 public class Member extends BaseEntity {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
