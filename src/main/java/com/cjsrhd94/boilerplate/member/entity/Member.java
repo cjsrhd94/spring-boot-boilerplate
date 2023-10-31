@@ -1,5 +1,7 @@
 package com.cjsrhd94.boilerplate.member.entity;
 
+import java.time.LocalDateTime;
+
 import org.hibernate.envers.Audited;
 import org.springframework.util.StringUtils;
 
@@ -31,6 +33,8 @@ public class Member extends BaseEntity {
 
 	private String email;
 	private String phone;
+	private String refreshToken;
+	private LocalDateTime refreshTokenExpireAt;
 
 	@Embedded
 	private Profile profile = new Profile();
@@ -38,7 +42,8 @@ public class Member extends BaseEntity {
 	@Builder
 	public Member(
 		Long id, String username, String password,
-		String email, String phone, Profile profile
+		String email, String phone, Profile profile,
+		String refreshToken, LocalDateTime refreshTokenExpireAt
 	) {
 		this.id = id;
 		this.username = username;
@@ -46,11 +51,27 @@ public class Member extends BaseEntity {
 		this.email = email;
 		this.phone = phone;
 		this.profile = profile;
+		this.refreshToken = refreshToken;
+		this.refreshTokenExpireAt = refreshTokenExpireAt;
 	}
 
 	public void updateProfile(String fileName, String filePath) {
 		if (StringUtils.hasText(fileName) && StringUtils.hasText(filePath)) {
 			this.profile = new Profile(fileName, filePath);
 		}
+	}
+	public void saveRefreshToken(String refreshToken, LocalDateTime refreshTokenExpireAt) {
+		if (StringUtils.hasText(refreshToken)) {
+			this.refreshToken = refreshToken;
+			this.refreshTokenExpireAt = refreshTokenExpireAt;
+		}
+	}
+
+	public void deleteRefreshToken() {
+		this.refreshToken = null;
+	}
+
+	public boolean isValidRefreshToken(String refreshToken, LocalDateTime now) {
+		return this.refreshToken.equals(refreshToken) && now.isBefore(refreshTokenExpireAt);
 	}
 }

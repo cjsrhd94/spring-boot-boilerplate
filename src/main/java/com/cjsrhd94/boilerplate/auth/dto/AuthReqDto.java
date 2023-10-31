@@ -3,7 +3,7 @@ package com.cjsrhd94.boilerplate.auth.dto;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
 
-public class AuthDto {
+public class AuthReqDto {
 	@Data
 	public static class Login {
 		@NotBlank

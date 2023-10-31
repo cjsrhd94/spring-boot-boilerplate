@@ -1,6 +1,8 @@
 package com.cjsrhd94.boilerplate.global.security;
 
 import java.io.IOException;
+import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -9,7 +11,7 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.servlet.HandlerExceptionResolver;
 
-import com.cjsrhd94.boilerplate.auth.dto.AuthDto;
+import com.cjsrhd94.boilerplate.auth.dto.AuthReqDto;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import jakarta.servlet.FilterChain;
@@ -20,16 +22,16 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class CustomUsernamePasswordAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
 	private final AuthenticationManager manager;
-	private final JwtProvider jwtProvider;
+	private final JwtService jwtService;
 	private final HandlerExceptionResolver resolver;
 
 	public CustomUsernamePasswordAuthenticationFilter(
 		AuthenticationManager authenticationManager,
-		JwtProvider jwtProvider,
+		JwtService jwtService,
 		HandlerExceptionResolver handlerExceptionResolver
 	) {
 		this.manager = authenticationManager;
-		this.jwtProvider = jwtProvider;
+		this.jwtService = jwtService;
 		this.resolver = handlerExceptionResolver;
 	}
 
@@ -42,8 +44,8 @@ public class CustomUsernamePasswordAuthenticationFilter extends UsernamePassword
 			log.info("[UsernamePasswordAuthenticationFilter]");
 			log.info("--> attempt authentication");
 			// request에서 username과 password를 파싱해서 Object로 받는다.
-			AuthDto.Login dto = new ObjectMapper()
-				.readValue(request.getInputStream(), AuthDto.Login.class);
+			AuthReqDto.Login dto = new ObjectMapper()
+				.readValue(request.getInputStream(), AuthReqDto.Login.class);
 			/*
 			 * AuthenticationManager는 사용자 아이디 / 비밀번호가 유효한 인증인지 확인한다.
 			 * .authenticate()메서드 내의 Authentication이 유효한지 확인하고, Authentication 객체를 리턴한다.
@@ -68,13 +70,20 @@ public class CustomUsernamePasswordAuthenticationFilter extends UsernamePassword
 	) throws IOException {
 		UserDetailsImpl userDetails = (UserDetailsImpl)authResult.getPrincipal();
 
-		String accessToken = jwtProvider.createAccessToken(userDetails.getUsername());
-		String refreshToken = jwtProvider.createRefreshToken(userDetails.getUsername());
+		LocalDateTime now = LocalDateTime.now();
+		String accessToken = jwtService.createAccessToken(userDetails.getUsername(), now);
+		String refreshToken = jwtService.createRefreshToken(userDetails.getUsername(), now);
 
-		jwtProvider.setAccessTokenToHeader(response, accessToken);
-		jwtProvider.setRefreshTokenToHeader(response, refreshToken);
+		jwtService.saveRefreshToken(
+			userDetails.getUsername(),
+			refreshToken,
+			now.plus(JwtProperties.REFRESH_EXPIRATION_TIME, ChronoUnit.MILLIS)
+		);
 
-		jwtProvider.setResponseMessage(response, true, "로그인 성공");
+		jwtService.setAccessTokenToHeader(response, accessToken);
+		jwtService.setRefreshTokenToHeader(response, refreshToken);
+
+		jwtService.setResponseMessage(response, true, "로그인 성공");
 		log.info("--> success authentication");
 	}
 

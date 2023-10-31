@@ -2,6 +2,7 @@ package com.cjsrhd94.boilerplate.global.error;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -46,8 +47,8 @@ public class ErrorResponse {
 			.map(Object::toString)
 			.orElse("");
 
-		List<ErrorResponse.FieldError> errors = ErrorResponse.FieldError.of(
-			e.getName(), value, e.getErrorCode());
+		List<ErrorResponse.FieldError> errors 
+			= ErrorResponse.FieldError.of(e.getName(), value, e.getErrorCode());
 		return new ErrorResponse(ErrorCode.INVALID_INPUT_VALUE, errors);
 	}
 
@@ -73,9 +74,7 @@ public class ErrorResponse {
 				.map(
 					e -> new FieldError(
 						e.getField(),
-						e.getRejectedValue() == null
-							? ""
-							: e.getRejectedValue().toString(),
+						Objects.requireNonNull(e.getRejectedValue()).toString(),
 						e.getDefaultMessage()
 					)
 				)

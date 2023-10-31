@@ -1,10 +1,14 @@
 package com.cjsrhd94.boilerplate.global.security;
 
 import java.io.IOException;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.temporal.ChronoUnit;
 import java.util.Date;
 
 import org.json.JSONObject;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
@@ -13,30 +17,43 @@ import com.auth0.jwt.exceptions.SignatureVerificationException;
 import com.auth0.jwt.exceptions.TokenExpiredException;
 import com.cjsrhd94.boilerplate.global.error.auth.JwtExpiredException;
 import com.cjsrhd94.boilerplate.global.error.auth.JwtNotValidException;
+import com.cjsrhd94.boilerplate.member.repository.MemberQuery;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import lombok.RequiredArgsConstructor;
 
-@Component
-public class JwtProvider {
-	public String createAccessToken(String username) {
-		long now = System.currentTimeMillis();
+@Service
+@RequiredArgsConstructor
+public class JwtService {
+	private final MemberQuery memberQuery;
+
+	@Transactional
+	public void saveRefreshToken(String username, String refreshToken, LocalDateTime expireAt) {
+		memberQuery.findMemberByUsername(username)
+			.saveRefreshToken(refreshToken, expireAt);
+	}
+
+	public String createAccessToken(String username, LocalDateTime now) {
 		return JWT.create()
 			.withIssuer(JwtProperties.ISSUER)
 			.withSubject(JwtProperties.ACCESS_TOKEN)
-			.withIssuedAt(new Date(now))
-			.withExpiresAt(new Date(now + JwtProperties.ACCESS_EXPIRATION_TIME))
+			.withIssuedAt(Date.from(now.atZone(ZoneId.systemDefault()).toInstant()))
+			.withExpiresAt(
+				Date.from(now.plus(JwtProperties.ACCESS_EXPIRATION_TIME, ChronoUnit.MILLIS)
+					.atZone(ZoneId.systemDefault()).toInstant()))
 			.withClaim(JwtProperties.USERNAME, username)
 			.sign(Algorithm.HMAC512(JwtProperties.SECRET));
 	}
 
-	public String createRefreshToken(String username) {
-		long now = System.currentTimeMillis();
+	public String createRefreshToken(String username, LocalDateTime now) {
 		return JWT.create()
 			.withIssuer(JwtProperties.ISSUER)
 			.withSubject(JwtProperties.REFRESH_TOKEN)
-			.withIssuedAt(new Date(now))
-			.withExpiresAt(new Date(now + JwtProperties.REFRESH_EXPIRATION_TIME))
+			.withIssuedAt(Date.from(now.atZone(ZoneId.systemDefault()).toInstant()))
+			.withExpiresAt(
+				Date.from(now.plus(JwtProperties.REFRESH_EXPIRATION_TIME, ChronoUnit.MILLIS)
+					.atZone(ZoneId.systemDefault()).toInstant()))
 			.withClaim(JwtProperties.USERNAME, username)
 			.sign(Algorithm.HMAC512(JwtProperties.SECRET));
 	}
@@ -62,12 +79,17 @@ public class JwtProvider {
 		response.getWriter().print(json);
 	}
 
-	public String extractToken(HttpServletRequest request) {
+	public String extractAccessToken(HttpServletRequest request) {
 		return request.getHeader(JwtProperties.ACCESS_HEADER_PREFIX)
 			.replace(JwtProperties.TOKEN_PREFIX, "");
 	}
 
-	public boolean validateAccessToken(String accessToken) {
+	public String extractRefreshToken(HttpServletRequest request) {
+		return request.getHeader(JwtProperties.REFRESH_HEADER_PREFIX)
+			.replace(JwtProperties.TOKEN_PREFIX, "");
+	}
+
+	public boolean validateToken(String accessToken) {
 		try {
 			JWT.require(Algorithm.HMAC512(JwtProperties.SECRET))
 				.build().verify(accessToken);
@@ -82,7 +104,7 @@ public class JwtProvider {
 		return false;
 	}
 
-	public String getUsernameFrom(String accessToken) {
+	public String extractUsernameFrom(String accessToken) {
 		return JWT.require(Algorithm.HMAC512(JwtProperties.SECRET))
 			.build()
 			.verify(accessToken)

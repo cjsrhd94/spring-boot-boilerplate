@@ -20,16 +20,16 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 public class CustomAuthorizationFilter extends BasicAuthenticationFilter {
-	private final JwtProvider jwtProvider;
+	private final JwtService jwtService;
 	private final MemberRepository memberRepository;
 
 	public CustomAuthorizationFilter(
 		AuthenticationManager authenticationManager,
-		JwtProvider jwtProvider,
+		JwtService jwtService,
 		MemberRepository memberRepository
 	) {
 		super(authenticationManager);
-		this.jwtProvider = jwtProvider;
+		this.jwtService = jwtService;
 		this.memberRepository = memberRepository;
 	}
 
@@ -54,14 +54,14 @@ public class CustomAuthorizationFilter extends BasicAuthenticationFilter {
 			return;
 		}
 		// 'TOKEN_PREFIX'를 제거한다.
-		String accessToken = jwtProvider.extractToken(request);
+		String accessToken = jwtService.extractAccessToken(request);
 
 		// 유효한 JWT 토큰인지 확인한다.
-		if (jwtProvider.validateAccessToken(accessToken)) {
+		if (jwtService.validateToken(accessToken)) {
 			log.info("----> complete valid access token");
 			try {
 				log.info("------> try save access token in security context");
-				String username = jwtProvider.getUsernameFrom(accessToken);
+				String username = jwtService.extractUsernameFrom(accessToken);
 				Member member = memberRepository.findByUsername(username)
 					.orElseThrow(() -> new UsernameNotFoundException("해당 회원을 찾을 수 없습니다."));
 
@@ -85,6 +85,8 @@ public class CustomAuthorizationFilter extends BasicAuthenticationFilter {
 				log.warn("----> fail to save access token in security context!");
 				throw new IOException();
 			}
+		} else if (!jwtService.validateToken(accessToken)) {
+
 		}
 
 		chain.doFilter(request, response);

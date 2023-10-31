@@ -23,7 +23,7 @@ import lombok.AllArgsConstructor;
 @AllArgsConstructor
 public class SecurityConfig{
 	private final UserDetailsService userDetailService;
-	private final JwtProvider jwtProvider;
+	private final JwtService jwtService;
 	private final MemberRepository memberRepository;
 	private final HandlerExceptionResolver handlerExceptionResolver;
 
@@ -54,7 +54,7 @@ public class SecurityConfig{
 			)
 			.addFilter(customUsernamePasswordAuthenticationFilter())
 			.addFilterBefore(
-				new CustomAuthorizationFilter(authenticationManager(), jwtProvider, memberRepository),
+				new CustomAuthorizationFilter(authenticationManager(), jwtService, memberRepository),
 				BasicAuthenticationFilter.class
 			)
 			.addFilterBefore(
@@ -75,7 +75,7 @@ public class SecurityConfig{
 
 	public CustomUsernamePasswordAuthenticationFilter customUsernamePasswordAuthenticationFilter() {
 		CustomUsernamePasswordAuthenticationFilter filter
-			= new CustomUsernamePasswordAuthenticationFilter(authenticationManager(), jwtProvider, handlerExceptionResolver);
+			= new CustomUsernamePasswordAuthenticationFilter(authenticationManager(), jwtService, handlerExceptionResolver);
 		filter.setFilterProcessesUrl("/api/v1/login");
 		return filter;
 	}

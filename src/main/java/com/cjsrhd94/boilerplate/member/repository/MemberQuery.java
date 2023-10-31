@@ -20,4 +20,11 @@ public class MemberQuery {
 			.where(member.id.eq(id))
 			.fetchOne();
 	}
+
+	public Member findMemberByUsername(String username) {
+		return queryFactory
+			.selectFrom(member)
+			.where(member.username.eq(username))
+			.fetchOne();
+	}
 }
