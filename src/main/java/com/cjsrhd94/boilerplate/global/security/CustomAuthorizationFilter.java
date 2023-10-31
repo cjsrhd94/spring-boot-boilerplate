@@ -85,8 +85,6 @@ public class CustomAuthorizationFilter extends BasicAuthenticationFilter {
 				log.warn("----> fail to save access token in security context!");
 				throw new IOException();
 			}
-		} else if (!jwtService.validateToken(accessToken)) {
-
 		}
 
 		chain.doFilter(request, response);

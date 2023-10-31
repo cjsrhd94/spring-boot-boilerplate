@@ -13,6 +13,7 @@ import com.cjsrhd94.boilerplate.global.security.UserDetailsImpl;
 import com.cjsrhd94.boilerplate.member.entity.Member;
 import com.cjsrhd94.boilerplate.member.repository.MemberRepository;
 
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -25,19 +26,21 @@ public class AuthService {
 	private final JwtService jwtService;
 	private final MemberRepository memberRepository;
 
-	public void reissue(HttpServletResponse response, UserDetailsImpl userDetails, String receivedRefreshToken) {
-		Member member = memberRepository.getReferenceById(userDetails.getMemberId());
+	public void reissue(HttpServletRequest request, HttpServletResponse response) {
+		String oldRefreshToken = jwtService.extractRefreshToken(request);
+		Member member = memberRepository.findByRefreshToken(oldRefreshToken)
+			.orElseThrow(JwtNotValidException::new);
 		LocalDateTime now = LocalDateTime.now();
 		// 리프레시 토큰이 유효하지 않다면 exception을 발생시킨다.
-		if (!member.isValidRefreshToken(receivedRefreshToken, now)) {
+		if (!member.isValidRefreshToken(oldRefreshToken, now)) {
 			throw new JwtNotValidException();
 		}
 
-		String accessToken = jwtService.createAccessToken(userDetails.getUsername(), now);
-		String refreshToken = jwtService.createRefreshToken(userDetails.getUsername(), now);
+		String accessToken = jwtService.createAccessToken(member.getUsername(), now);
+		String refreshToken = jwtService.createRefreshToken(member.getUsername(), now);
 
 		jwtService.saveRefreshToken(
-			userDetails.getUsername(),
+			member.getUsername(),
 			refreshToken,
 			now.plus(JwtProperties.REFRESH_EXPIRATION_TIME, ChronoUnit.MILLIS)
 		);
