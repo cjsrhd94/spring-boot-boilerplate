@@ -69,6 +69,7 @@ public class Member extends BaseEntity {
 
 	public void deleteRefreshToken() {
 		this.refreshToken = null;
+		this.refreshTokenExpireAt = null;
 	}
 
 	public boolean isValidRefreshToken(String refreshToken, LocalDateTime now) {
