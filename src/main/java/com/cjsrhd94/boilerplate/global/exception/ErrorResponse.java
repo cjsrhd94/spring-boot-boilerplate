@@ -1,4 +1,4 @@
-package com.cjsrhd94.boilerplate.global.error;
+package com.cjsrhd94.boilerplate.global.exception;
 
 import java.util.ArrayList;
 import java.util.List;

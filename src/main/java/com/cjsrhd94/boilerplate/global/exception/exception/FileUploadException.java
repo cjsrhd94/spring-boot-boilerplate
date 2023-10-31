@@ -1,6 +1,6 @@
-package com.cjsrhd94.boilerplate.global.error.exception;
+package com.cjsrhd94.boilerplate.global.exception.exception;
 
-import com.cjsrhd94.boilerplate.global.error.ErrorCode;
+import com.cjsrhd94.boilerplate.global.exception.ErrorCode;
 
 public class FileUploadException extends BaseException{
 	public FileUploadException() {
