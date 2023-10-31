@@ -1,6 +1,4 @@
-package com.cjsrhd94.boilerplate.global.exception.exception;
-
-import com.cjsrhd94.boilerplate.global.exception.ErrorCode;
+package com.cjsrhd94.boilerplate.global.exception;
 
 import lombok.Getter;
 

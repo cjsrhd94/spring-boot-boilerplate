@@ -1,5 +1,6 @@
-package com.cjsrhd94.boilerplate.global.exception.exception;
+package com.cjsrhd94.boilerplate.global.exception.custom;
 
+import com.cjsrhd94.boilerplate.global.exception.BaseException;
 import com.cjsrhd94.boilerplate.global.exception.ErrorCode;
 
 public class JwtNotValidException extends BaseException {

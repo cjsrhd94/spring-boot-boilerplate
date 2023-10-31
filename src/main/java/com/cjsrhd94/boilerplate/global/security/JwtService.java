@@ -15,8 +15,8 @@ import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.JWTDecodeException;
 import com.auth0.jwt.exceptions.SignatureVerificationException;
 import com.auth0.jwt.exceptions.TokenExpiredException;
-import com.cjsrhd94.boilerplate.global.exception.exception.JwtExpiredException;
-import com.cjsrhd94.boilerplate.global.exception.exception.JwtNotValidException;
+import com.cjsrhd94.boilerplate.global.exception.custom.JwtExpiredException;
+import com.cjsrhd94.boilerplate.global.exception.custom.JwtNotValidException;
 import com.cjsrhd94.boilerplate.member.repository.MemberQuery;
 
 import jakarta.servlet.http.HttpServletRequest;

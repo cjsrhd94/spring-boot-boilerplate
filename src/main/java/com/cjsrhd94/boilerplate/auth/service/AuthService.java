@@ -6,7 +6,7 @@ import java.time.temporal.ChronoUnit;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.cjsrhd94.boilerplate.global.exception.exception.JwtNotValidException;
+import com.cjsrhd94.boilerplate.global.exception.custom.JwtNotValidException;
 import com.cjsrhd94.boilerplate.global.security.JwtProperties;
 import com.cjsrhd94.boilerplate.global.security.JwtService;
 import com.cjsrhd94.boilerplate.global.security.UserDetailsImpl;
