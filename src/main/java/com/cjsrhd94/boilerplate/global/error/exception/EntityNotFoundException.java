@@ -1,4 +1,6 @@
-package com.cjsrhd94.boilerplate.global.error.business;
+package com.cjsrhd94.boilerplate.global.error.exception;
+
+import com.cjsrhd94.boilerplate.global.error.ErrorCode;
 
 public class EntityNotFoundException extends BaseException {
 	public EntityNotFoundException() {

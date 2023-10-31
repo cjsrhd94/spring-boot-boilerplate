@@ -14,8 +14,7 @@ import org.springframework.web.method.annotation.MethodArgumentTypeMismatchExcep
 import com.auth0.jwt.exceptions.JWTDecodeException;
 import com.auth0.jwt.exceptions.SignatureVerificationException;
 import com.auth0.jwt.exceptions.TokenExpiredException;
-import com.cjsrhd94.boilerplate.global.error.business.BaseException;
-import com.cjsrhd94.boilerplate.global.error.business.ErrorCode;
+import com.cjsrhd94.boilerplate.global.error.exception.BaseException;
 
 import lombok.extern.slf4j.Slf4j;
 
