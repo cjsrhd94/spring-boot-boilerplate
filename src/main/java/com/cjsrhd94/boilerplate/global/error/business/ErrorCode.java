@@ -19,6 +19,9 @@ public enum ErrorCode {
 	// AUTH
 	AUTHENTICATION_ERROR(BAD_REQUEST, "A001", "인증 오류가 발생하였습니다."),
 	ACCESS_DENIED(FORBIDDEN, "A002", "접근이 거부되었습니다."),
+	JWT_NOT_VALID(BAD_REQUEST, "A003", "토큰이 유효하지 않습니다."),
+	JWT_EXPIRED(BAD_REQUEST, "A004", "토큰이 만료되었습니다."),
+	MEMBER_NOT_VALID(BAD_REQUEST, "A005", "회원 정보가 일치하지 않습니다. 아이디와 비밀번호를 확인해주세요."),
 
 	// S3
 	FILE_UPLOAD_FAIL(BAD_REQUEST, "F001", "파일 업로드 중 오류가 발생했습니다.")

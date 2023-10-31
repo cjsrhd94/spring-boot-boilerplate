@@ -3,6 +3,7 @@ package com.cjsrhd94.boilerplate.global.error;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -10,6 +11,9 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
+import com.auth0.jwt.exceptions.JWTDecodeException;
+import com.auth0.jwt.exceptions.SignatureVerificationException;
+import com.auth0.jwt.exceptions.TokenExpiredException;
 import com.cjsrhd94.boilerplate.global.error.business.BaseException;
 import com.cjsrhd94.boilerplate.global.error.business.ErrorCode;
 
@@ -116,6 +120,39 @@ public class GlobalExceptionHandler {
         log.warn(e.getMessage(), e);
         final ErrorResponse response = ErrorResponse.of(ErrorCode.ACCESS_DENIED);
         return new ResponseEntity<>(response, HttpStatus.FORBIDDEN);
+    }
+
+    /**
+     * http status 400
+     * 자격 증명에 실패했을 때 동작
+     */
+    @ExceptionHandler(BadCredentialsException.class)
+    protected ResponseEntity<ErrorResponse> handleMemberNotValid(BadCredentialsException e) {
+        log.warn(e.getMessage(), e);
+        final ErrorResponse response = ErrorResponse.of(ErrorCode.MEMBER_NOT_VALID);
+        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+    }
+
+    /**
+     * http status 400
+     * Token이 만료되었을 때 동작
+     */
+    @ExceptionHandler(TokenExpiredException.class)
+    protected ResponseEntity<ErrorResponse> handleTokenExpiredException(TokenExpiredException e) {
+        log.warn(e.getMessage(), e);
+        final ErrorResponse response = ErrorResponse.of(ErrorCode.JWT_EXPIRED);
+        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+    }
+
+    /**
+     * http status 400
+     * Token이 유효하지 않을 때 동작
+     */
+    @ExceptionHandler(value = {JWTDecodeException.class, SignatureVerificationException.class})
+    protected ResponseEntity<ErrorResponse> handleJwtNotValidException(Exception e) {
+        log.warn(e.getMessage(), e);
+        final ErrorResponse response = ErrorResponse.of(ErrorCode.JWT_NOT_VALID);
+        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
     }
 
     /**
